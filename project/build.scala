@@ -7,6 +7,12 @@ object Versions {
   val akka = "2.4.2"
 }
 
+object Settings {
+  lazy val projectIdOpt = sys.env.get("PROJECT_ID")
+
+  lazy val projectDockerRepository = projectIdOpt.map(p => s"gcr.io/$p")
+}
+
 object Dependencies {
   val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
@@ -49,7 +55,7 @@ object DockerSettings {
     version in Docker <<= version,
     packageName in Docker <<= name,
     maintainer in Docker := "Maciej Bilas <maciej.bilas@gmail.com>",
-    dockerRepository := Some("maciejb"),
+    dockerRepository := Settings.projectDockerRepository,
     dockerUpdateLatest := true,
     defaultLinuxInstallLocation in Docker := s"/opt/${name.value}"
   )
